@@ -1,0 +1,8 @@
+{
+  "name": "a",
+  "version": "1.0.0",
+  "description": "Test package a",
+  "scripts": {
+    "my-task": "node ../my-task.js"
+  }
+}
