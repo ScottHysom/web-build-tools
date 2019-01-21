@@ -314,17 +314,21 @@ export class Utilities {
   /**
    * Executes the command using cmd if running on windows, or using sh if running on a non-windows OS.
    * @param command - the command to run on shell
-   * @param workingDirectory - working directory for running this command
-   * @param initCwd = the folder containing a local .npmrc, which will be used
+   *
+   * Value for `options`:
+   *  `workingDirectory` - working directory for running this command
+   *  `initCwd` - the folder containing a local .npmrc, which will be used
    *        for the INIT_CWD environment variable
-   * @param handleOutput - if true, hide the process's output, but if there is a nonzero exit code
-   *   then show the stderr
+   *  `handleOutput` - if true, hide the process's output, but if there is a nonzero exit code
+   *        then show the stderr
+   *  `env` - additional environment variables to add/replace to the existing process.env.
    */
   public static executeLifecycleCommand(
     command: string, options: {
       workingDirectory: string,
       initCwd: string,
-      handleOutput: boolean
+      handleOutput: boolean,
+      env?: IEnvironment
     }
   ): number {
     let shellCommand: string = process.env.comspec || 'cmd';
@@ -335,8 +339,8 @@ export class Utilities {
       commandFlags = '-c';
       useShell = false;
     }
-
-    const environment: IEnvironment = Utilities._createEnvironmentForRushCommand(options.initCwd);
+    const initialEnvironment: IEnvironment = {...process.env, ...(options.env || {})};
+    const environment: IEnvironment = Utilities._createEnvironmentForRushCommand(options.initCwd, initialEnvironment);
 
     const result: child_process.SpawnSyncReturns<Buffer> = child_process.spawnSync(
       shellCommand,

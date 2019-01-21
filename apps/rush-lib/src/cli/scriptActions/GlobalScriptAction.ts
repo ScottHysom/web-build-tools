@@ -53,7 +53,10 @@ export class GlobalScriptAction extends BaseScriptAction {
         {
           workingDirectory: this.rushConfiguration.rushJsonFolder,
           initCwd: this.rushConfiguration.commonTempFolder,
-          handleOutput: false
+          handleOutput: false,
+          env: {
+            rush_command: shellCommand
+          }
         }
       );
 
